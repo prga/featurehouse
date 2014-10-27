@@ -32,13 +32,21 @@ import de.ovgu.cide.fstgen.ast.FSTNonTerminal;
 import de.ovgu.cide.fstgen.ast.FSTTerminal;
 
 public class FSTGenMerger extends FSTGenProcessor {
-	
+
 	static final String MERGE_SEPARATOR = "##FSTMerge##";
 	static final String SEMANTIC_MERGE_MARKER = "~~FSTMerge~~";
 	private static LinkedList<FSTNode> baseNodes = new LinkedList<FSTNode>();
-	
+
 	private MergeVisitor mergeVisitor = new MergeVisitor();
-		
+
+	//#conflictsAnalyzer
+
+	public MergeVisitor getMergeVisitor() {
+		return mergeVisitor;
+	}
+
+	//end #conflictsAnalyzer
+
 	public FSTGenMerger() {
 		super();
 		mergeVisitor.registerMerger(new LineBasedMerger());
@@ -50,17 +58,17 @@ public class FSTGenMerger extends FSTGenProcessor {
 			if(builder instanceof CSharpBuilder)
 				stdCSharpBuilder = builder;
 		}
-		
+
 		unregisterArtifactBuilder(stdJavaBuilder);
 		unregisterArtifactBuilder(stdCSharpBuilder);
-		
+
 		registerArtifactBuilder(new JavaMergeBuilder());
 		registerArtifactBuilder(new CSharpMergeBuilder());
 		registerArtifactBuilder(new PythonMergeBuilder());
 		registerArtifactBuilder(new TextMergeBuilder(".java"));
 		registerArtifactBuilder(new TextMergeBuilder(".cs"));
 		registerArtifactBuilder(new TextMergeBuilder(".py"));
-		
+
 		PrintVisitorInterface stdJavaPrinter = null;
 		PrintVisitorInterface stdCSharpPrinter = null;
 		for(PrintVisitorInterface printer : this.getPrintVisitors()) {
@@ -69,10 +77,10 @@ public class FSTGenMerger extends FSTGenProcessor {
 			if(printer instanceof CSharpPrintVisitor)
 				stdCSharpPrinter = printer;
 		}
-		
+
 		unregisterPrintVisitor(stdJavaPrinter);
 		unregisterPrintVisitor(stdCSharpPrinter);
-		
+
 		registerPrintVisitor(new JavaMergePrintVisitor());
 		registerPrintVisitor(new CSharpMergePrintVisitor());
 		registerPrintVisitor(new PythonMergePrintVisitor());
@@ -81,14 +89,14 @@ public class FSTGenMerger extends FSTGenProcessor {
 		registerPrintVisitor(new TextMergePrintVisitor(".py"));
 
 	}
-	
+
 	public void printUsage() {
 		System.err.println(
-"Usage: FSTGenMerger [-h, --help] [-o, --output-directory] \n" +
-"                    [-b, --base-directory] [-p, --preprocess-files] \n" +
-"                    <-e, --expression>|<-f, --filemerge> myfile parentfile yourfile \n");
+				"Usage: FSTGenMerger [-h, --help] [-o, --output-directory] \n" +
+						"                    [-b, --base-directory] [-p, --preprocess-files] \n" +
+				"                    <-e, --expression>|<-f, --filemerge> myfile parentfile yourfile \n");
 	}
-	
+
 	public void run(String[] args) {
 		// configuration options
 		CmdLineParser cmdparser = new CmdLineParser();
@@ -100,7 +108,7 @@ public class FSTGenMerger extends FSTGenProcessor {
 		CmdLineParser.Option preprocessfiles = cmdparser.addBooleanOption('p', "preprocess-files");
 		CmdLineParser.Option quiet = cmdparser.addBooleanOption('q', "quiet");
 		CmdLineParser.Option filemerge = cmdparser.addBooleanOption('f', "filemerge");
-		
+
 		try {
 			cmdparser.parse(args);
 		} catch (CmdLineParser.OptionException e) {
@@ -108,7 +116,7 @@ public class FSTGenMerger extends FSTGenProcessor {
 			printUsage();
 			System.exit(2);
 		}
-		
+
 		Boolean preprocessfilesval = (Boolean)cmdparser.getOptionValue(preprocessfiles, Boolean.FALSE);
 		fileLoader.setPreprocessFiles(preprocessfilesval);
 		Boolean filemergeval = (Boolean)cmdparser.getOptionValue(filemerge);
@@ -123,7 +131,7 @@ public class FSTGenMerger extends FSTGenProcessor {
 		}
 		String outputdirval = (String)cmdparser.getOptionValue(outputdir);
 		Boolean quietval = (Boolean)cmdparser.getOptionValue(quiet, Boolean.FALSE);
-		
+
 		try {
 			try {
 				fileLoader.loadFiles(expressionval, basedirval, false);
@@ -145,22 +153,22 @@ public class FSTGenMerger extends FSTGenProcessor {
 						if (! ftos.isEmpty())
 							System.out.println(feature.toString());
 					}
-						
-				
+
+
 				FSTNode merged;
-				
+
 				if(features.size() != 0) {
 					merged = merge(features);
-					
+
 					mergeVisitor.visit(merged);
-					
+
 					if (!quietval) {
 						String mtos = merged.toString();
 						if (! mtos.isEmpty())
 							System.err.println(merged.toString());
 					}
-						
-					
+
+
 					try {
 						featureVisitor.visit((FSTNonTerminal) merged);
 					} catch (PrintVisitorException e) {
@@ -181,16 +189,16 @@ public class FSTGenMerger extends FSTGenProcessor {
 		FSTGenMerger merger = new FSTGenMerger();
 		merger.run(args);
 	}
-	
+
 	private static FSTNode merge(List<FSTNonTerminal> tl) throws MergeException {
-		
+
 		if(tl.size() != 3)
 			throw new MergeException(tl);
-		
+
 		tl.get(0).index = 0;
 		tl.get(1).index = 1;
 		tl.get(2).index = 2;
-		
+
 		FSTNode mergeLeftBase = merge(tl.get(0), tl.get(1), true);
 		FSTNode mergeLeftBaseRight = merge(mergeLeftBase, tl.get(2), false);
 		removeLoneBaseNodes(mergeLeftBaseRight);
@@ -202,10 +210,10 @@ public class FSTGenMerger extends FSTGenProcessor {
 	}
 
 	public static FSTNode merge(FSTNode nodeA, FSTNode nodeB, FSTNonTerminal compParent, boolean firstPass) {
-		
+
 		//System.err.println("nodeA: " + nodeA.getName() + " index: " + nodeA.index);
 		//System.err.println("nodeB: " + nodeB.getName() + " index: " + nodeB.index);
-		
+
 		if (nodeA.compatibleWith(nodeB)) {
 			FSTNode compNode = nodeA.getShallowClone();
 			compNode.index = nodeB.index;
@@ -260,7 +268,7 @@ public class FSTGenMerger extends FSTGenProcessor {
 				FSTTerminal terminalA = (FSTTerminal) nodeA;
 				FSTTerminal terminalB = (FSTTerminal) nodeB;
 				FSTTerminal terminalComp = (FSTTerminal) compNode;
-				
+
 				// SPECIAL CONFLICT HANDLER
 				if (!terminalA.getMergingMechanism().equals("Default")) {
 					terminalComp.setBody(mergeBody(terminalA.getBody(), terminalB.getBody(), firstPass, terminalA.index, terminalB.index));
@@ -271,13 +279,13 @@ public class FSTGenMerger extends FSTGenProcessor {
 		} else
 			return null;
 	}
-	
+
 	private static String mergeBody(String bodyA, String bodyB, boolean firstPass, int indexA, int indexB) {
 
 		//System.err.println(firstPass);
 		//System.err.println("#" + bodyA + "#");
 		//System.err.println("#" + bodyB + "#");
-		
+
 		if (bodyA.contains(SEMANTIC_MERGE_MARKER)) {
 			return bodyA + " " + bodyB;
 		}
