@@ -1,14 +1,11 @@
 package merger;
 
 import java.util.LinkedList;
+import java.util.Observable;
 
 import de.ovgu.cide.fstgen.ast.FSTNode;
 import de.ovgu.cide.fstgen.ast.FSTNonTerminal;
 import de.ovgu.cide.fstgen.ast.FSTTerminal;
-
-//#conflictsAnalyzer
-import conflictsAnalyzer.Conflict;
-//end of #conflictsAnalyzer
 
 public class MergeVisitor 
 //#conflictsAnalyzer
@@ -39,7 +36,7 @@ extends Observable
 
 						//#conflictsAnalyzer
 						String nodeBody = ((FSTTerminal)current).getBody();
-						if(nodeBody.contains(FSTGenMerger.MERGE_SEPARATOR) || nodeBody.contains(Conflict.DIFF3MERGE_SEPARATOR)) {
+						if(nodeBody.contains(FSTGenMerger.MERGE_SEPARATOR) || nodeBody.contains(FSTGenMerger.DIFF3MERGE_SEPARATOR)) {
 							setChanged();
 							notifyObservers(current);
 						}

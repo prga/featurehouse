@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
@@ -15,6 +16,7 @@ import javax.xml.stream.XMLStreamException;
 import modification.ModificationComposition;
 import modification.content.UnknownContentTypeParseException;
 import modification.content.UnknownFileTypeParseException;
+import modification.traversalLanguageParser.addressManagement.DuplicateFreeLinkedList;
 import modification.xmlParser.XmlParser;
 
 import org.xml.sax.SAXException;
@@ -23,6 +25,8 @@ import builder.ArtifactBuilderInterface;
 import cide.gparser.ParseException;
 import cide.gparser.TokenMgrError;
 import de.ovgu.cide.fstgen.ast.FSTFeatureNode;
+import de.ovgu.cide.fstgen.ast.FSTNode;
+import de.ovgu.cide.fstgen.ast.FSTNonTerminal;
 
 public class FileLoader {
 
@@ -67,30 +71,42 @@ public class FileLoader {
 		return builderList;
 	}
 
-	public void loadFiles(String equationFileName,
-			String equationBaseDirectoryName, boolean aheadEquation)
+	public void loadFiles(String equationFileName,String equationBaseDirectoryName, boolean aheadEquation)
 			throws FileNotFoundException, ParseException {
-		parseEquationFile(equationFileName, equationBaseDirectoryName,
-				aheadEquation);
+		parseEquationFile(equationFileName, equationBaseDirectoryName,aheadEquation);
 	}
 
-	public void loadFiles(String equationFileName,
-			String equationBaseDirectoryName, boolean aheadEquation,
-			String[] features) throws FileNotFoundException, ParseException {
-		parseEquationFile(equationFileName, equationBaseDirectoryName,
-				aheadEquation, features);
-	}
-
-	private void parseEquationFile(String equationFileName,
-			String equationBaseDirectoryName, boolean aheadEquation)
+	public void loadFiles(String equationFileName,String equationBaseDirectoryName, boolean aheadEquation, String[] features) 
 			throws FileNotFoundException, ParseException {
-		parseEquationFile(equationFileName, equationBaseDirectoryName,
-				aheadEquation, null);
+		parseEquationFile(equationFileName, equationBaseDirectoryName,aheadEquation, features, null);
 	}
 
-	private void parseEquationFile(String equationFileName,
-			String equationBaseDirectoryName, boolean aheadEquation,
-			String[] features) throws FileNotFoundException, ParseException {
+	public void loadFiles(String equationFileName,String equationBaseDirectoryName, boolean aheadEquation, List<ArtifactBuilderInterface> buildersAccepted)
+			throws FileNotFoundException, ParseException {
+		parseEquationFile(equationFileName, equationBaseDirectoryName,aheadEquation, buildersAccepted);
+		
+		//REMOVER N”S DEFEITUOSOS
+		//removeBadNodes(buildersAccepted);
+	}
+
+	public void loadFiles(String equationFileName,String equationBaseDirectoryName, boolean aheadEquation, String[] features, List<ArtifactBuilderInterface> buildersAccepted) 
+			throws FileNotFoundException, ParseException {
+		parseEquationFile(equationFileName, equationBaseDirectoryName,aheadEquation, features, buildersAccepted);
+	}
+	
+	private void parseEquationFile(String equationFileName,	String equationBaseDirectoryName, boolean aheadEquation)
+			throws FileNotFoundException, ParseException {
+		parseEquationFile(equationFileName, equationBaseDirectoryName, aheadEquation, null);
+	}
+	
+	private void parseEquationFile(String equationFileName,	String equationBaseDirectoryName, boolean aheadEquation, List<ArtifactBuilderInterface> buildersAccepted)
+			throws FileNotFoundException, ParseException {
+		parseEquationFile(equationFileName, equationBaseDirectoryName, aheadEquation, null, buildersAccepted);
+	}
+
+	private void parseEquationFile(String equationFileName,	String equationBaseDirectoryName, boolean aheadEquation,String[] features, List<ArtifactBuilderInterface> buildersAccepted) 
+			throws FileNotFoundException, ParseException {
+		
 		if (equationFileName == null || equationFileName.length() == 0)
 			throw new FileNotFoundException();
 		File equationFile = new File(equationFileName);
@@ -124,9 +140,9 @@ public class FileLoader {
 			if (features == null) {
 				features = equationFileContent.split("\\s");
 			}
-			FSTGenComposer.outStream.println("Found the following features in expression file:");
+			System.out.println("Found the following features in expression file:");
 			for (String s : features)
-				FSTGenComposer.outStream.println(s);
+				System.out.println(s);
 
 			// if (features.length == 0) {
 			// features = equationFileContent.split(" ");
@@ -148,7 +164,7 @@ public class FileLoader {
 					File feature = new File(equationBaseDirectoryName
 							+ features[i]);
 					if (!feature.exists()) {
-						FSTGenComposer.outStream.println("Did not find feature directory " + feature.getAbsolutePath() + "; treating it as empty feature.");
+						System.out.println("Did not find feature directory " + feature.getAbsolutePath() + "; treating it as empty feature.");
 					}
 					// Initialize each ArtifactBuilder with the current feature features[i].
 					// If we do not initialize it FSTGenMerger fails, because a feature might
@@ -159,7 +175,7 @@ public class FileLoader {
 						biter.next().addFeature(new FSTFeatureNode(features[i]));
 					}
 
-					parseDirectory(feature, !aheadEquation);
+					parseDirectory(feature, !aheadEquation, buildersAccepted);
 				}
 			}
 		}
@@ -172,8 +188,9 @@ public class FileLoader {
 	 * @throws FileNotFoundException
 	 * @throws ParseException
 	 */
-	void parseDirectory(File directory, boolean recursive)
-			throws FileNotFoundException, ParseException {
+	void parseDirectory(File directory, boolean recursive, List<ArtifactBuilderInterface> buildersAccepted)
+			throws FileNotFoundException, ParseException {	
+		
 		if (directory.getName().equals(MODIFICATION_FOLDER_TAG)) {
 			// TODO _mod folder should only be allowed as direct subfolder of
 			// feature folder
@@ -213,7 +230,14 @@ public class FileLoader {
 							.iterator();
 					while (iterator.hasNext()) {
 						ArtifactBuilderInterface builder = iterator.next();
+						
+						//CRIAR LISTA DE BUILDERS ACEITOS
+						
 						if (builder.acceptFile(files[i])) {
+							
+							if(buildersAccepted != null && !buildersAccepted.contains(builder))
+								buildersAccepted.add(builder);
+							
 							try {
 								if (isPreprocessFiles())
 									builder.setPreprocessNode(true);
@@ -232,7 +256,7 @@ public class FileLoader {
 			File[] directories = directory.listFiles(directoryFileFilter);
 			if (directories != null) {
 				for (int i = 0; i < directories.length; i++) {
-					parseDirectory(directories[i], recursive);
+					parseDirectory(directories[i], recursive, buildersAccepted);
 				}
 			}
 		} else {
@@ -244,6 +268,10 @@ public class FileLoader {
 					while (iterator.hasNext()) {
 						ArtifactBuilderInterface builder = iterator.next();
 						if (builder.acceptFile(files[i])) {
+							
+							if(buildersAccepted != null && !buildersAccepted.contains(builder))
+								buildersAccepted.add(builder);
+							
 							try {
 								builder.processFile(files[i]);
 							} catch (ParseException e) {
@@ -307,4 +335,30 @@ public class FileLoader {
 	public ModificationComposition getModifications() {
 		return modcomposition;
 	}
+	
+	
+	private void removeBadNodes(List<ArtifactBuilderInterface> buildersAccepted) {
+		DuplicateFreeLinkedList<File> parsedErrors = composer.getErrorFiles();
+		for(File f : parsedErrors){
+			for(ArtifactBuilderInterface builder : buildersAccepted){
+				LinkedList<FSTNonTerminal> revisions = builder.getFeatures();
+				for(FSTNonTerminal revision : revisions){
+					List<FSTNode> children = revision.getChildren();
+					for(int i = 0; i< children.size(); i++){
+						if(children.get(i).getName().contains(f.getName()))
+							children.remove(i);
+					}
+				}
+			}
+		}
+	}
+	
+	public FSTGenProcessor getComposer() {
+		return composer;
+	}
+
+	public void setComposer(FSTGenProcessor composer) {
+		this.composer = composer;
+	}
+
 }
