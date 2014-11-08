@@ -95,17 +95,17 @@ public class FileLoader {
 	}
 	
 	private void parseEquationFile(String equationFileName,	String equationBaseDirectoryName, boolean aheadEquation)
-			throws FileNotFoundException, ParseException {
+			throws FileNotFoundException, ParseException, cide.gparser.TokenMgrError {
 		parseEquationFile(equationFileName, equationBaseDirectoryName, aheadEquation, null);
 	}
 	
 	private void parseEquationFile(String equationFileName,	String equationBaseDirectoryName, boolean aheadEquation, List<ArtifactBuilderInterface> buildersAccepted)
-			throws FileNotFoundException, ParseException {
+			throws FileNotFoundException, ParseException, cide.gparser.TokenMgrError {
 		parseEquationFile(equationFileName, equationBaseDirectoryName, aheadEquation, null, buildersAccepted);
 	}
 
 	private void parseEquationFile(String equationFileName,	String equationBaseDirectoryName, boolean aheadEquation,String[] features, List<ArtifactBuilderInterface> buildersAccepted) 
-			throws FileNotFoundException, ParseException {
+			throws FileNotFoundException, ParseException{
 		
 		if (equationFileName == null || equationFileName.length() == 0)
 			throw new FileNotFoundException();
@@ -127,7 +127,10 @@ public class FileLoader {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
+		} catch (cide.gparser.TokenMgrError e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}finally {
 			if (fileReader != null) {
 				try {
 					fileReader.close();
@@ -218,6 +221,9 @@ public class FileLoader {
 			} catch (UnknownContentTypeParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}catch (cide.gparser.TokenMgrError e) {
+				// TODO: handle exception
+				e.printStackTrace();
 			}
 
 		} else if (recursive) {
@@ -247,7 +253,7 @@ public class FileLoader {
 								composer.fireParseErrorOccured(e);
 							} catch (TokenMgrError e) {
 								composer.getErrorFiles().add(files[i]);
-								throw (e);
+								//throw (e);
 							}
 						}
 					}

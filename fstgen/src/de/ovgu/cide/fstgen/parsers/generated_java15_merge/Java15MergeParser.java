@@ -15,7 +15,7 @@ import de.ovgu.cide.fstgen.ast.*;
 public class Java15MergeParser extends AbstractFSTParser implements Java15MergeParserConstants {
         public Java15MergeParser(){}
 
-  final public FSTInfo CompilationUnit(boolean inTerminal) throws ParseException {
+  final public FSTInfo CompilationUnit(boolean inTerminal) throws ParseException, cide.gparser.TokenMgrError{
                                                 Token first=null,t;FSTInfo n;
      first=getToken(1); productionStart(inTerminal);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -8224,7 +8224,7 @@ public class Java15MergeParser extends AbstractFSTParser implements Java15MergeP
     return token;
   }
 
-  final public Token getToken(int index) {
+  final public Token getToken(int index) throws cide.gparser.TokenMgrError {
     Token t = lookingAhead ? jj_scanpos : token;
     for (int i = 0; i < index; i++) {
       if (t.next != null) t = t.next;

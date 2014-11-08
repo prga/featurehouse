@@ -111,7 +111,7 @@ public abstract class ArtifactBuilder implements ArtifactBuilderInterface {
 	 * @see builder.ArtifactBuilderInterface#processFile(java.io.File)
 	 */
 	public void processFile(File inputFile) throws FileNotFoundException,
-			ParseException {
+			ParseException , cide.gparser.TokenMgrError{
 		FSTGenComposer.outStream.println("processing: " + inputFile.getPath());
 		FSTNonTerminal parent = null;
 		StringTokenizer st = new StringTokenizer(inputFile.getPath(),

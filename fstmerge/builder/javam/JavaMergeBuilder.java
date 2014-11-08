@@ -16,7 +16,8 @@ public class JavaMergeBuilder extends ArtifactBuilder {
 		super(".java");
 	}
 
-	public void processNode(FSTNonTerminal parent, StringTokenizer st, File inputFile) throws FileNotFoundException, ParseException {
+	public void processNode(FSTNonTerminal parent, StringTokenizer st, File inputFile) throws FileNotFoundException, 
+	ParseException, cide.gparser.TokenMgrError {
 		FSTNonTerminal rootDocument = new FSTNonTerminal("Java-File", st.nextToken());
 		parent.addChild(rootDocument);
 		Java15MergeParser p = new Java15MergeParser(new OffsetCharStream(new FileInputStream(inputFile)));
