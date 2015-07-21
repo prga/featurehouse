@@ -491,7 +491,7 @@ public class Java15MergeParser extends AbstractFSTParser implements Java15MergeP
       n = ClassOrInterfaceType(true);
                                                                                                     replaceName(n);
     }
-                                                                                                                        {if (true) return productionEndTerminal("ExtendsList","-","-","Replacement","Default",first,token);}
+                                                                                                                        {if (true) return productionEndTerminal("ExtendsList","-","-","Replacement","SemanticConflict",first,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -693,7 +693,7 @@ public class Java15MergeParser extends AbstractFSTParser implements Java15MergeP
       jj_la1[29] = jj_gen;
       ;
     }
-                                                            {if (true) return productionEndTerminal("TypeParameter","-","-","Replacement","Default",first,token);}
+                                                            {if (true) return productionEndTerminal("TypeParameter","-","-","Replacement","SemanticConflict",first,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -717,7 +717,7 @@ public class Java15MergeParser extends AbstractFSTParser implements Java15MergeP
       n = ClassOrInterfaceType(true);
                                                                                                     replaceName(n);
     }
-                                                                                                                        {if (true) return productionEndTerminal("TypeBound","-","-","Replacement","Default",first,token);}
+                                                                                                                        {if (true) return productionEndTerminal("TypeBound","-","-","Replacement","SemanticConflict",first,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -1655,7 +1655,7 @@ public class Java15MergeParser extends AbstractFSTParser implements Java15MergeP
       jj_consume_token(EXTENDS);
       n = ReferenceTypeP(true);
                                           replaceName(n);
-                                                            {if (true) return productionEndTerminal("WildcardBounds1","-","-","Replacement","Default",first,token);}
+                                                            {if (true) return productionEndTerminal("WildcardBounds1","-","-","Replacement","SemanticConflict",first,token);}
       break;
     case SUPER:
       jj_consume_token(SUPER);
