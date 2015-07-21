@@ -36,8 +36,8 @@ import de.ovgu.cide.fstgen.ast.FSTTerminal;
 
 public class FSTGenMerger extends FSTGenProcessor {
 
-	static final String MERGE_SEPARATOR = "##FSTMerge##";
-	static final String SEMANTIC_MERGE_MARKER = "~~FSTMerge~~";
+	public static final String MERGE_SEPARATOR = "##FSTMerge##";
+	public static final String SEMANTIC_MERGE_MARKER = "~~FSTMerge~~";
 	private static LinkedList<FSTNode> baseNodes = new LinkedList<FSTNode>();
 
 	private MergeVisitor mergeVisitor = new MergeVisitor();

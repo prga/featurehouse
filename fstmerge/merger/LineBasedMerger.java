@@ -104,13 +104,7 @@ public class LineBasedMerger implements MergerInterface {
 				res += line + "\n";
 			}
 			pr.getInputStream().close();
-			//#if conflictsAnalyzer
-			if(res.contains("<<<<<<<") && res.contains(">>>>>>>")){
-				res = "<<<<<<< left\n" + tokens[0] + FSTGenMerger.DIFF3MERGE_SEPARATOR +" base\n" + tokens[1] + 
-						"======= right\n" + tokens[2] + ">>>>>>>";
-				
-			}
-			//#endif conflictsAnalyzer
+
 			node.setBody(res);
 			
 			buf = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
