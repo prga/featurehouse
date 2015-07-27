@@ -47,7 +47,8 @@ public class FSTGenMerger extends FSTGenProcessor {
 		public MergeVisitor getMergeVisitor() {
 			return mergeVisitor;
 		}
-		public static final String DIFF3MERGE_SEPARATOR = "|||||||";
+		public static final String DIFF3MERGE_SEPARATOR = "<<<<<<<";
+		public static final String DIFF3MERGE_END = ">>>>>>>";
 
 	//end #conflictsAnalyzer
 
