@@ -41,7 +41,7 @@ public class LineBasedMerger implements MergerInterface {
 				node.setBody("");
 			} else if(tokens[0].equals(tokens[2])) {
 				node.setBody(tokens[0]);
-			} else if(tokens[0].equals(tokens[1]) && tokens[2].length() > 0) {
+			} else if(tokens[0].equals(tokens[1]) && (tokens[2].length() > 0)) {
 				node.setBody(tokens[2]);
 			} else if(tokens[2].equals(tokens[1]) && tokens[0].length() > 0) {
 				node.setBody(tokens[0]);
@@ -93,7 +93,7 @@ public class LineBasedMerger implements MergerInterface {
 	        if(System.getProperty("os.name").contains("Windows"))
 	        	mergeCmd = "C:\\Programme\\cygwin\\bin\\merge.exe -q -p " + "\"" + fileVar1.getPath() + "\"" + " " + "\"" + fileBase.getPath() + "\"" + " " + "\"" + fileVar2.getPath() + "\"";// + " > " + fileVar1.getName() + "_output";
 	        else
-	        	mergeCmd = "diff3 --merge " + fileVar1.getPath() + " " + fileBase.getPath() + " " + fileVar2.getPath();// + " > " + fileVar1.getName() + "_output";
+	        	mergeCmd = "diff3 --merge -E " + fileVar1.getPath() + " " + fileBase.getPath() + " " + fileVar2.getPath();// + " > " + fileVar1.getName() + "_output";
 	        Runtime run = Runtime.getRuntime();
 			Process pr = run.exec(mergeCmd);
 
