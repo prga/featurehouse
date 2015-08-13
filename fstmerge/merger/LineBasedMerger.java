@@ -104,7 +104,23 @@ public class LineBasedMerger implements MergerInterface {
 				res += line + "\n";
 			}
 			pr.getInputStream().close();
+			
+			//#conflictAnalyzer
+			if(res.contains(FSTGenMerger.DIFF3MERGE_SEPARATOR)){
+				mergeCmd = "diff3 --merge " + fileVar1.getPath() + " " + fileBase.getPath() + " " + fileVar2.getPath();// + " > " + fileVar1.getName() + "_output";
+		         run = Runtime.getRuntime();
+				 pr = run.exec(mergeCmd);
 
+				 buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+				 line = "";
+				 res = "";
+				while ((line=buf.readLine())!=null) {
+					res += line + "\n";
+				}
+				pr.getInputStream().close();
+			}
+			//#conflictAnalyzer
+			
 			node.setBody(res);
 			
 			buf = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
