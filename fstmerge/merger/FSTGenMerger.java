@@ -6,6 +6,8 @@ import jargs.gnu.CmdLineParser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -49,10 +51,21 @@ public class FSTGenMerger extends FSTGenProcessor {
 		}
 		public static final String DIFF3MERGE_SEPARATOR = "<<<<<<<";
 		public static final String DIFF3MERGE_END = ">>>>>>>";
-
+		
+		public void setBuildersAndPrinters(Hashtable<String, Integer> extensions){
+			Iterator it = extensions.entrySet().iterator();
+			while(it.hasNext()){
+				String value = it.next().toString();
+				String extension = "." + value.substring(0, value.length()-2);
+				registerArtifactBuilder(new TextMergeBuilder(extension));
+				registerPrintVisitor(new TextMergePrintVisitor(extension));
+			}
+			
+		}
+		
 	//end #conflictsAnalyzer
 
-	public FSTGenMerger() {
+	public FSTGenMerger(Hashtable<String, Integer> extensions) {
 		super();
 		mergeVisitor.registerMerger(new LineBasedMerger());
 		ArtifactBuilderInterface stdJavaBuilder = null;
@@ -63,17 +76,20 @@ public class FSTGenMerger extends FSTGenProcessor {
 			//if (builder instanceof CSharpBuilder)
 				//stdCSharpBuilder = builder;
 		}
-
+		
 		unregisterArtifactBuilder(stdJavaBuilder);
-		//unregisterArtifactBuilder(stdCSharpBuilder);
+		registerArtifactBuilder(new JavaMergeBuilder());
+		
+		/*unregisterArtifactBuilder(stdJavaBuilder);
+		unregisterArtifactBuilder(stdCSharpBuilder);
 
 		registerArtifactBuilder(new JavaMergeBuilder());
-		//registerArtifactBuilder(new CSharpMergeBuilder());
-		//registerArtifactBuilder(new PythonMergeBuilder());
+		registerArtifactBuilder(new CSharpMergeBuilder());
+		registerArtifactBuilder(new PythonMergeBuilder());
 		registerArtifactBuilder(new TextMergeBuilder(".java"));
-		//registerArtifactBuilder(new TextMergeBuilder(".cs"));
-		registerArtifactBuilder(new TextMergeBuilder(".nomes"));
-		registerArtifactBuilder(new TextMergeBuilder(".xml"));
+		registerArtifactBuilder(new TextMergeBuilder(".cs"));
+		registerArtifactBuilder(new TextMergeBuilder(".py"));*/
+		
 
 		PrintVisitorInterface stdJavaPrinter = null;
 		//PrintVisitorInterface stdCSharpPrinter = null;
@@ -88,13 +104,13 @@ public class FSTGenMerger extends FSTGenProcessor {
 		//unregisterPrintVisitor(stdCSharpPrinter);
 
 		registerPrintVisitor(new JavaMergePrintVisitor());
-		//registerPrintVisitor(new CSharpMergePrintVisitor());
-		//registerPrintVisitor(new PythonMergePrintVisitor());
+		/*registerPrintVisitor(new CSharpMergePrintVisitor());
+		registerPrintVisitor(new PythonMergePrintVisitor());
 		registerPrintVisitor(new TextMergePrintVisitor(".java"));
-		//registerPrintVisitor(new TextMergePrintVisitor(".cs"));
+		registerPrintVisitor(new TextMergePrintVisitor(".cs"));
 		registerPrintVisitor(new TextMergePrintVisitor(".nomes"));
-		registerPrintVisitor(new TextMergePrintVisitor(".xml"));
-
+		registerPrintVisitor(new TextMergePrintVisitor(".xml"));*/
+		this.setBuildersAndPrinters(extensions);
 	}
 
 	public void printUsage() {
@@ -206,10 +222,10 @@ public class FSTGenMerger extends FSTGenProcessor {
 		}
 	}
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		FSTGenMerger merger = new FSTGenMerger();
 		merger.run(args);
-	}
+	}*/
 
 	private static FSTNode merge(List<FSTNonTerminal> tl) throws MergeException {
 
