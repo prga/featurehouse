@@ -35,10 +35,18 @@ extends Observable
 						merger.merge((FSTTerminal)current);
 
 						//#conflictsAnalyzer
+						//perform conflict pattern analysis and removal of spacing conflicts
 						String nodeBody = ((FSTTerminal)current).getBody();
 						if(nodeBody.contains(FSTGenMerger.MERGE_SEPARATOR) || nodeBody.contains(FSTGenMerger.DIFF3MERGE_SEPARATOR)) {
 							setChanged();
 							notifyObservers(current);
+						}
+						
+						//mark merges without conflicts with contributions from each revision
+						if(!(nodeBody.contains(FSTGenMerger.MERGE_SEPARATOR) || nodeBody.contains(FSTGenMerger.DIFF3MERGE_SEPARATOR))){
+							
+						}else{
+							
 						}
 						//end of #conflictsAnalyzer
 					}

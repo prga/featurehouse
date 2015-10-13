@@ -56,42 +56,44 @@ public class FSTGenMerger extends FSTGenProcessor {
 		super();
 		mergeVisitor.registerMerger(new LineBasedMerger());
 		ArtifactBuilderInterface stdJavaBuilder = null;
-		ArtifactBuilderInterface stdCSharpBuilder = null;
+		//ArtifactBuilderInterface stdCSharpBuilder = null;
 		for (ArtifactBuilderInterface builder : this.getArtifactBuilders()) {
 			if (builder instanceof JavaBuilder)
 				stdJavaBuilder = builder;
-			if (builder instanceof CSharpBuilder)
-				stdCSharpBuilder = builder;
+			//if (builder instanceof CSharpBuilder)
+				//stdCSharpBuilder = builder;
 		}
 
 		unregisterArtifactBuilder(stdJavaBuilder);
-		unregisterArtifactBuilder(stdCSharpBuilder);
+		//unregisterArtifactBuilder(stdCSharpBuilder);
 
 		registerArtifactBuilder(new JavaMergeBuilder());
-		registerArtifactBuilder(new CSharpMergeBuilder());
-		registerArtifactBuilder(new PythonMergeBuilder());
+		//registerArtifactBuilder(new CSharpMergeBuilder());
+		//registerArtifactBuilder(new PythonMergeBuilder());
 		registerArtifactBuilder(new TextMergeBuilder(".java"));
-		registerArtifactBuilder(new TextMergeBuilder(".cs"));
-		registerArtifactBuilder(new TextMergeBuilder(".py"));
+		//registerArtifactBuilder(new TextMergeBuilder(".cs"));
+		registerArtifactBuilder(new TextMergeBuilder(".nomes"));
+		registerArtifactBuilder(new TextMergeBuilder(".xml"));
 
 		PrintVisitorInterface stdJavaPrinter = null;
-		PrintVisitorInterface stdCSharpPrinter = null;
+		//PrintVisitorInterface stdCSharpPrinter = null;
 		for (PrintVisitorInterface printer : this.getPrintVisitors()) {
 			if (printer instanceof JavaPrintVisitor)
 				stdJavaPrinter = printer;
-			if (printer instanceof CSharpPrintVisitor)
-				stdCSharpPrinter = printer;
+			//if (printer instanceof CSharpPrintVisitor)
+				//stdCSharpPrinter = printer;
 		}
 
 		unregisterPrintVisitor(stdJavaPrinter);
-		unregisterPrintVisitor(stdCSharpPrinter);
+		//unregisterPrintVisitor(stdCSharpPrinter);
 
 		registerPrintVisitor(new JavaMergePrintVisitor());
-		registerPrintVisitor(new CSharpMergePrintVisitor());
-		registerPrintVisitor(new PythonMergePrintVisitor());
+		//registerPrintVisitor(new CSharpMergePrintVisitor());
+		//registerPrintVisitor(new PythonMergePrintVisitor());
 		registerPrintVisitor(new TextMergePrintVisitor(".java"));
-		registerPrintVisitor(new TextMergePrintVisitor(".cs"));
-		registerPrintVisitor(new TextMergePrintVisitor(".py"));
+		//registerPrintVisitor(new TextMergePrintVisitor(".cs"));
+		registerPrintVisitor(new TextMergePrintVisitor(".nomes"));
+		registerPrintVisitor(new TextMergePrintVisitor(".xml"));
 
 	}
 

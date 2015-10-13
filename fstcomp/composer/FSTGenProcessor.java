@@ -52,7 +52,7 @@ public class FSTGenProcessor {
 	private ArrayList<FSTNode> fstnodes;
 
 	public FSTGenProcessor() {
-		registerArtifactBuilder(new FJBuilder());
+		/*registerArtifactBuilder(new FJBuilder());
 		registerArtifactBuilder(new AlloyBuilder());
 		registerArtifactBuilder(new JavaBuilder());
 		registerArtifactBuilder(new CSharpBuilder());
@@ -91,7 +91,12 @@ public class FSTGenProcessor {
 		registerPrintVisitor(new BinaryPrintVisitor(".aj"));
 
 		registerArtifactBuilder(new XMLBuilder());
-		registerPrintVisitor(new XMLPrintVisitor());
+		registerPrintVisitor(new XMLPrintVisitor());*/
+		
+		registerArtifactBuilder(new JavaBuilder());
+		registerArtifactBuilder(new JavaCCBuilder());
+		registerPrintVisitor(new JavaPrintVisitor());
+		registerPrintVisitor(new JavaCCPrintVisitor());
 		
 		errorFiles = new DuplicateFreeLinkedList<File>();
 		

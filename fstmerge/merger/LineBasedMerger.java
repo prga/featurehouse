@@ -118,8 +118,8 @@ public class LineBasedMerger implements MergerInterface {
 					res += line + "\n";
 				}
 				pr.getInputStream().close();
+				
 			}
-			//#conflictAnalyzer
 			
 			node.setBody(res);
 			
