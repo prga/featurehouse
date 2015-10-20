@@ -9,16 +9,17 @@ import java.io.InputStreamReader;
 
 
 import de.ovgu.cide.fstgen.ast.FSTTerminal;
+import main.Blame;
 
 public class LineBasedMerger implements MergerInterface {
-	
+
 	String encoding = "UTF-8";
 
 	public void merge(FSTTerminal node) throws ContentMergeException {
-		
+
 		String body = node.getBody() + " ";
 		String[] tokens = body.split(FSTGenMerger.MERGE_SEPARATOR);
-		
+
 		try {
 			tokens[0] = tokens[0].replace(FSTGenMerger.SEMANTIC_MERGE_MARKER, "").trim();
 			tokens[1] = tokens[1].trim();
@@ -35,8 +36,8 @@ public class LineBasedMerger implements MergerInterface {
 
 		// SPECIAL CONFLICT HANDLER
 		if(!(node.getType().contains("-Content") ||
-			node.getMergingMechanism().equals("LineBased")
-		)) {
+				node.getMergingMechanism().equals("LineBased")
+				)) {
 			if(tokens[0].length() == 0 && tokens[1].length() == 0 && tokens[2].length() == 0) {
 				node.setBody("");
 			} else if(tokens[0].equals(tokens[2])) {
@@ -54,47 +55,47 @@ public class LineBasedMerger implements MergerInterface {
 			//System.out.println("|" + tokens[1] + "|");
 			//System.out.println("|" + tokens[2] + "|");
 			//System.out.println("--------------------");
-			
-			
+
+
 			return;
 		}
 
-	    try {
-	    	long time = System.currentTimeMillis();
-	    	File tmpDir = new File(System.getProperty("user.dir") + File.separator + "fstmerge_tmp"+time);
-	    	tmpDir.mkdir();
-	    	
+		try {
+			long time = System.currentTimeMillis();
+			File tmpDir = new File(System.getProperty("user.dir") + File.separator + "fstmerge_tmp"+time);
+			tmpDir.mkdir();
+
 			File fileVar1 = File.createTempFile("fstmerge_var1_", "", tmpDir);
 			File fileBase = File.createTempFile("fstmerge_base_", "", tmpDir);
 			File fileVar2 = File.createTempFile("fstmerge_var2_", "", tmpDir);
-			
+
 			BufferedWriter writerVar1 = new BufferedWriter(new FileWriter(fileVar1));
-	        if(node.getType().contains("-Content") || tokens[0].length() == 0)
-	        	writerVar1.write(tokens[0]);
-	        else 
-	        	writerVar1.write(tokens[0] + "\n");
-	        writerVar1.close();
-	        
-	        BufferedWriter writerBase = new BufferedWriter(new FileWriter(fileBase));
-	        if(node.getType().contains("-Content") || tokens[1].length() == 0)
-	        	writerBase.write(tokens[1]);
-	        else 
-	        	writerBase.write(tokens[1] + "\n");
-	        writerBase.close();
+			if(node.getType().contains("-Content") || tokens[0].length() == 0)
+				writerVar1.write(tokens[0]);
+			else 
+				writerVar1.write(tokens[0] + "\n");
+			writerVar1.close();
 
-	        BufferedWriter writerVar2 = new BufferedWriter(new FileWriter(fileVar2));
-	        if(node.getType().contains("-Content") || tokens[2].length() == 0)
-	        	writerVar2.write(tokens[2]);
-	        else 
-	        	writerVar2.write(tokens[2] + "\n");
-	        writerVar2.close();
+			BufferedWriter writerBase = new BufferedWriter(new FileWriter(fileBase));
+			if(node.getType().contains("-Content") || tokens[1].length() == 0)
+				writerBase.write(tokens[1]);
+			else 
+				writerBase.write(tokens[1] + "\n");
+			writerBase.close();
 
-	        String mergeCmd = ""; 
-	        if(System.getProperty("os.name").contains("Windows"))
-	        	mergeCmd = "C:\\Programme\\cygwin\\bin\\merge.exe -q -p " + "\"" + fileVar1.getPath() + "\"" + " " + "\"" + fileBase.getPath() + "\"" + " " + "\"" + fileVar2.getPath() + "\"";// + " > " + fileVar1.getName() + "_output";
-	        else
-	        	mergeCmd = "diff3 --merge -E " + fileVar1.getPath() + " " + fileBase.getPath() + " " + fileVar2.getPath();// + " > " + fileVar1.getName() + "_output";
-	        Runtime run = Runtime.getRuntime();
+			BufferedWriter writerVar2 = new BufferedWriter(new FileWriter(fileVar2));
+			if(node.getType().contains("-Content") || tokens[2].length() == 0)
+				writerVar2.write(tokens[2]);
+			else 
+				writerVar2.write(tokens[2] + "\n");
+			writerVar2.close();
+
+			String mergeCmd = ""; 
+			if(System.getProperty("os.name").contains("Windows"))
+				mergeCmd = "C:\\Programme\\cygwin\\bin\\merge.exe -q -p " + "\"" + fileVar1.getPath() + "\"" + " " + "\"" + fileBase.getPath() + "\"" + " " + "\"" + fileVar2.getPath() + "\"";// + " > " + fileVar1.getName() + "_output";
+			else
+				mergeCmd = "diff3 --merge -E " + fileVar1.getPath() + " " + fileBase.getPath() + " " + fileVar2.getPath();// + " > " + fileVar1.getName() + "_output";
+			Runtime run = Runtime.getRuntime();
 			Process pr = run.exec(mergeCmd);
 
 			BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
@@ -104,39 +105,67 @@ public class LineBasedMerger implements MergerInterface {
 				res += line + "\n";
 			}
 			pr.getInputStream().close();
-			
+
 			//#conflictAnalyzer
 			if(res.contains(FSTGenMerger.DIFF3MERGE_SEPARATOR)){
 				mergeCmd = "diff3 --merge " + fileVar1.getPath() + " " + fileBase.getPath() + " " + fileVar2.getPath();// + " > " + fileVar1.getName() + "_output";
-		         run = Runtime.getRuntime();
-				 pr = run.exec(mergeCmd);
+				run = Runtime.getRuntime();
+				pr = run.exec(mergeCmd);
 
-				 buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-				 line = "";
-				 res = "";
+				buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+				line = "";
+				res = "";
 				while ((line=buf.readLine())!=null) {
 					res += line + "\n";
 				}
 				pr.getInputStream().close();
+
+			}else{
 				
+				if(this.bothVersionsWereEdited(tokens) && 
+						this.isMethodOrConstructor(node.getType())){
+					// call blame
+					Blame blame = new Blame();
+					res = blame.annotateBlame(fileVar1, fileBase, fileVar2);
+				}
 			}
-			
+			//#conflictAnalyzer
 			node.setBody(res);
-			
+
 			buf = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
 			while ((line=buf.readLine())!=null) {
 				System.err.println(line);
 			}
 			pr.getErrorStream().close();
 			pr.getOutputStream().close();
-	        
-		    fileVar1.delete();
-		    fileBase.delete();
-		    fileVar2.delete();
-		    tmpDir.delete();
 
-	    } catch (IOException e) {
-	    	e.printStackTrace();
-	    }
+			fileVar1.delete();
+			fileBase.delete();
+			fileVar2.delete();
+			tmpDir.delete();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
+
+	/* #conflictsAnalyzer 
+	 * only returns true if left and right are different than base,
+	 * and left is different from right*/
+	private boolean bothVersionsWereEdited(String[] tokens){
+		boolean result = false;
+		if( (!tokens[0].equals(tokens[1])) && (!tokens[2].equals(tokens[1])) &&
+				(!tokens[0].equals(tokens[2])) ){
+			result = true;
+		}
+		return result;
+	}
+	
+	/*only calls git blame routine on methods or constructor*/
+	public boolean isMethodOrConstructor(String type){
+		boolean result = type.equals("MethodDecl") || type.equals("ConstructorDecl");	
+		return result;
+	}
+	
+	//#conflictsAnalyzer
 }

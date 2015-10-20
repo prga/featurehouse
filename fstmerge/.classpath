@@ -6,5 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/CIDE_generateAST"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CIDE2_ast"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/fstgen"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/GremlinQuery"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
