@@ -6,6 +6,7 @@ import java.util.Observable;
 import de.ovgu.cide.fstgen.ast.FSTNode;
 import de.ovgu.cide.fstgen.ast.FSTNonTerminal;
 import de.ovgu.cide.fstgen.ast.FSTTerminal;
+import main.Blame;
 
 public class MergeVisitor 
 //#conflictsAnalyzer
@@ -40,14 +41,11 @@ extends Observable
 						if(nodeBody.contains(FSTGenMerger.MERGE_SEPARATOR) || nodeBody.contains(FSTGenMerger.DIFF3MERGE_SEPARATOR)) {
 							setChanged();
 							notifyObservers(current);
+						}else if(nodeBody.contains(Blame.LEFT_SEPARATOR) || nodeBody.contains(Blame.RIGHT_SEPARATOR)){
+							setChanged();
+							notifyObservers(current);
 						}
 						
-						//mark merges without conflicts with contributions from each revision
-						if(!(nodeBody.contains(FSTGenMerger.MERGE_SEPARATOR) || nodeBody.contains(FSTGenMerger.DIFF3MERGE_SEPARATOR))){
-							
-						}else{
-							
-						}
 						//end of #conflictsAnalyzer
 					}
 
