@@ -33,20 +33,29 @@ extends Observable
 				try {
 
 					if(((FSTTerminal)current).getBody().contains(FSTGenMerger.MERGE_SEPARATOR)) {
+						
+						//normalization study
+						setChanged();
+						notifyObservers(current);
+						//end of normalization study
+						
 						merger.merge((FSTTerminal)current);
 
 						//#conflictsAnalyzer
 						//perform conflict pattern analysis and removal of spacing conflicts
-						String nodeBody = ((FSTTerminal)current).getBody();
+						
+						/*String nodeBody = ((FSTTerminal)current).getBody();
 						if(nodeBody.contains(FSTGenMerger.MERGE_SEPARATOR) || nodeBody.contains(FSTGenMerger.DIFF3MERGE_SEPARATOR)) {
 							setChanged();
 							notifyObservers(current);
 						}else if(nodeBody.contains(Blame.LEFT_SEPARATOR) || nodeBody.contains(Blame.RIGHT_SEPARATOR)){
 							setChanged();
 							notifyObservers(current);
-						}
+						}*/
 						
 						//end of #conflictsAnalyzer
+						
+						
 					}
 
 				} catch (ContentMergeException e) {
