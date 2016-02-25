@@ -45,7 +45,6 @@ public class FSTGenMerger extends FSTGenProcessor {
 	private MergeVisitor mergeVisitor = new MergeVisitor();
 	
 	//#conflictsAnalyzer
-
 		public MergeVisitor getMergeVisitor() {
 			return mergeVisitor;
 		}
