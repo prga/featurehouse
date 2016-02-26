@@ -78,7 +78,6 @@ extends Observable
 
 	public boolean nodeWasChanged(FSTTerminal node){
 		boolean nodeWasChanged = false;
-		if(!node.getType().equals("ClassOrInterface1") && !node.getType().equals("Id")){
 			if(node.getBody().contains(FSTGenMerger.MERGE_SEPARATOR)){
 				String body = node.getBody() + " ";
 				String[] tokens = body.split(FSTGenMerger.MERGE_SEPARATOR);
@@ -98,10 +97,9 @@ extends Observable
 				}
 			}else{
 				nodeWasChanged = true;
-			}
-		}
-		
+			}	
 		return nodeWasChanged;
 	}
+	
 	//normalization study
 }

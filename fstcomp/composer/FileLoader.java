@@ -86,7 +86,7 @@ public class FileLoader {
 		parseEquationFile(equationFileName, equationBaseDirectoryName,aheadEquation, buildersAccepted);
 		
 		//REMOVER N”S DEFEITUOSOS
-		//removeBadNodes(buildersAccepted);
+		removeBadNodes(buildersAccepted);
 	}
 
 	public void loadFiles(String equationFileName,String equationBaseDirectoryName, boolean aheadEquation, String[] features, List<ArtifactBuilderInterface> buildersAccepted) 

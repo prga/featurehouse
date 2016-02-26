@@ -363,6 +363,7 @@ public class FSTGenMerger extends FSTGenProcessor {
 	}
 
 	private void removeBadParsedFiles(String expressionval) {
+		
 		StringBuffer sb = new StringBuffer(expressionval);
 		sb.setLength(sb.lastIndexOf("."));
 		sb.delete(0, sb.lastIndexOf(File.separator) + 1);
