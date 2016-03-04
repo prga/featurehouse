@@ -107,7 +107,7 @@ public class LineBasedMerger implements MergerInterface {
 			pr.getInputStream().close();
 
 			//#conflictAnalyzer
-			if(res.contains(FSTGenMerger.DIFF3MERGE_SEPARATOR)){
+			/*if(res.contains(FSTGenMerger.DIFF3MERGE_SEPARATOR)){
 				mergeCmd = "diff3 --merge " + fileVar1.getPath() + " " + fileBase.getPath() + " " + fileVar2.getPath();// + " > " + fileVar1.getName() + "_output";
 				run = Runtime.getRuntime();
 				pr = run.exec(mergeCmd);
@@ -128,7 +128,7 @@ public class LineBasedMerger implements MergerInterface {
 					Blame blame = new Blame();
 					res = blame.annotateBlame(fileVar1, fileBase, fileVar2);
 				}
-			}
+			}*/
 			//#conflictAnalyzer
 			node.setBody(res);
 
