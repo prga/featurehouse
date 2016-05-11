@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 
 
 import de.ovgu.cide.fstgen.ast.FSTTerminal;
-import main.Blame;
+
 
 public class LineBasedMerger implements MergerInterface {
 
@@ -107,7 +107,7 @@ public class LineBasedMerger implements MergerInterface {
 			pr.getInputStream().close();
 
 			//#conflictAnalyzer
-			/*if(res.contains(FSTGenMerger.DIFF3MERGE_SEPARATOR)){
+			if(res.contains(FSTGenMerger.DIFF3MERGE_SEPARATOR)){
 				mergeCmd = "diff3 --merge " + fileVar1.getPath() + " " + fileBase.getPath() + " " + fileVar2.getPath();// + " > " + fileVar1.getName() + "_output";
 				run = Runtime.getRuntime();
 				pr = run.exec(mergeCmd);
@@ -122,13 +122,21 @@ public class LineBasedMerger implements MergerInterface {
 
 			}else{
 				
-				if(this.bothVersionsWereEdited(tokens) && 
-						this.isMethodOrConstructor(node.getType())){
-					// call blame
-					Blame blame = new Blame();
-					res = blame.annotateBlame(fileVar1, fileBase, fileVar2);
+				if(this.isMethodOrConstructor(node.getType())){
+					boolean bothVersionsWereEdited = this.bothVersionsWereEdited(tokens);
+					//if(this.atLeastOneVersionWasEdited(tokens)){
+						// call blame
+						
+						if(bothVersionsWereEdited){
+							res = node.getBody();
+							//Blame blame = new Blame();
+							//res = blame.annotateBlame(fileVar1, fileBase, fileVar2);
+							//res = res + "\n" + Blame.BOTH_VERSIONS_WERE_EDITED;
+						}
+					//}
+					
 				}
-			}*/
+			}
 			//#conflictAnalyzer
 			node.setBody(res);
 
@@ -150,12 +158,22 @@ public class LineBasedMerger implements MergerInterface {
 	}
 
 	/* #conflictsAnalyzer 
-	 * only returns true if left and right are different than base,
-	 * and left is different from right*/
+	 * returns true if both versions (left and right) differ from base*/
 	private boolean bothVersionsWereEdited(String[] tokens){
 		boolean result = false;
 		if( (!tokens[0].equals(tokens[1])) && (!tokens[2].equals(tokens[1])) &&
 				(!tokens[0].equals(tokens[2])) ){
+			result = true;
+		}
+		return result;
+	}
+	
+	/* #conflictsAnalyzer 
+	 * returns true if at least one version (left or right) differs from base*/
+	private boolean atLeastOneVersionWasEdited(String[] tokens){
+		boolean result = false;
+		if( !tokens[0].equals("") && !tokens[2].equals("") && 
+				( !tokens[0].equals(tokens[1]) || !tokens[2].equals(tokens[1]) ) ){
 			result = true;
 		}
 		return result;
