@@ -120,7 +120,7 @@ public class LineBasedMerger implements MergerInterface {
 				}
 				pr.getInputStream().close();
 
-			}else{
+			}/*else{
 				
 				if(this.isMethodOrConstructor(node.getType())){
 					boolean bothVersionsWereEdited = this.bothVersionsWereEdited(tokens);
@@ -136,7 +136,7 @@ public class LineBasedMerger implements MergerInterface {
 					//}
 					
 				}
-			}
+			}*/
 			//#conflictAnalyzer
 			node.setBody(res);
 
