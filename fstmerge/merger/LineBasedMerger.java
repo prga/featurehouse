@@ -122,19 +122,8 @@ public class LineBasedMerger implements MergerInterface {
 
 			}else{
 				
-				if(this.isMethodOrConstructor(node.getType())){
-					boolean bothVersionsWereEdited = this.bothVersionsWereEdited(tokens);
-					//if(this.atLeastOneVersionWasEdited(tokens)){
-						// call blame
-						
-						if(bothVersionsWereEdited){
-							res = node.getBody();
-							//Blame blame = new Blame();
-							//res = blame.annotateBlame(fileVar1, fileBase, fileVar2);
-							//res = res + "\n" + Blame.BOTH_VERSIONS_WERE_EDITED;
-						}
-					//}
-					
+				if(this.isConflictPredictor(node, tokens)){
+						res = node.getBody();
 				}
 			}
 			//#conflictAnalyzer
@@ -158,17 +147,6 @@ public class LineBasedMerger implements MergerInterface {
 	}
 
 	/* #conflictsAnalyzer 
-	 * returns true if both versions (left and right) differ from base*/
-	private boolean bothVersionsWereEdited(String[] tokens){
-		boolean result = false;
-		if( (!tokens[0].equals(tokens[1])) && (!tokens[2].equals(tokens[1])) &&
-				(!tokens[0].equals(tokens[2])) ){
-			result = true;
-		}
-		return result;
-	}
-	
-	/* #conflictsAnalyzer 
 	 * returns true if at least one version (left or right) differs from base*/
 	private boolean atLeastOneVersionWasEdited(String[] tokens){
 		boolean result = false;
@@ -182,6 +160,14 @@ public class LineBasedMerger implements MergerInterface {
 	/*only calls git blame routine on methods or constructor*/
 	public boolean isMethodOrConstructor(String type){
 		boolean result = type.equals("MethodDecl") || type.equals("ConstructorDecl");	
+		return result;
+	}
+	
+	private boolean isConflictPredictor(FSTTerminal node, String[] tokens){
+		boolean result = false;
+		if(this.isMethodOrConstructor(node.getType()) && this.atLeastOneVersionWasEdited(tokens)){
+			result = true;
+		}
 		return result;
 	}
 	

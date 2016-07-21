@@ -50,7 +50,7 @@ public class FSTGenMerger extends FSTGenProcessor {
 		}
 		public static final String DIFF3MERGE_SEPARATOR = "<<<<<<<";
 		public static final String DIFF3MERGE_END = ">>>>>>>";
-		
+		public DuplicateFreeLinkedList<File> parsedErrors ;
 	//end #conflictsAnalyzer
 
 	public FSTGenMerger() {
@@ -157,6 +157,7 @@ public class FSTGenMerger extends FSTGenProcessor {
 
 			try {
 				fileLoader.loadFiles(expressionval, basedirval, false,buildersAccepted);
+				this.parsedErrors = fileLoader.getComposer().getErrorFiles();
 			} catch (cide.gparser.ParseException e1) {
 				fireParseErrorOccured(e1);
 				e1.printStackTrace();
@@ -199,7 +200,7 @@ public class FSTGenMerger extends FSTGenProcessor {
 				}
 			}
 
-			removeBadParsedFiles(expressionval);
+			//removeBadParsedFiles(expressionval);
 
 			setFstnodes(AbstractFSTParser.fstnodes);
 		} catch (MergeException me) {
