@@ -37,7 +37,13 @@ public class LineBasedMerger implements MergerInterface {
 		// SPECIAL CONFLICT HANDLER
 		if(!(node.getType().contains("-Content") ||
 				node.getMergingMechanism().equals("LineBased")
-				)) {
+				)
+				//#conflictAnalyzer
+				/*if this node is a class field 
+				 * run diff3 instead*/
+				&& !(node.getType().equals("FieldDecl"))
+				//#conflictAnalyzer
+				) {
 			if(tokens[0].length() == 0 && tokens[1].length() == 0 && tokens[2].length() == 0) {
 				node.setBody("");
 			} else if(tokens[0].equals(tokens[2])) {
@@ -163,9 +169,24 @@ public class LineBasedMerger implements MergerInterface {
 		return result;
 	}
 	
+	/*the node represents a conflict predictor in the following cases:
+	 * 1- it is a method or constructor and at least one version was edited
+	 * 2- it is a class field, BOTH versions were edited, and the base 
+	 * version is not empty */
 	private boolean isConflictPredictor(FSTTerminal node, String[] tokens){
 		boolean result = false;
-		if(this.isMethodOrConstructor(node.getType()) && this.atLeastOneVersionWasEdited(tokens)){
+		if((this.isMethodOrConstructor(node.getType()) && this.atLeastOneVersionWasEdited(tokens)) ||
+				(node.getType().equals("FieldDecl") && this.bothVersionsWereEdited(tokens) 
+						&& !tokens[1].equals("")) ){
+			result = true;
+		}
+		return result;
+	}
+	
+	private boolean bothVersionsWereEdited(String[] tokens){
+		boolean result = false;
+		if( !tokens[0].equals("") && !tokens[2].equals("") 
+				&& !tokens[2].equals(tokens[1]) &&  !tokens[0].equals(tokens[1]) ){
 			result = true;
 		}
 		return result;
