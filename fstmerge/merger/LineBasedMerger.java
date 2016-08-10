@@ -126,12 +126,12 @@ public class LineBasedMerger implements MergerInterface {
 				}
 				pr.getInputStream().close();
 
-			}else{
+			}/*else{
 				
 				if(this.isConflictPredictor(node, tokens)){
 						res = node.getBody();
 				}
-			}
+			}*/
 			//#conflictAnalyzer
 			node.setBody(res);
 

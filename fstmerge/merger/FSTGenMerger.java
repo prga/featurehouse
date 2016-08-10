@@ -51,6 +51,7 @@ public class FSTGenMerger extends FSTGenProcessor {
 		public static final String DIFF3MERGE_SEPARATOR = "<<<<<<<";
 		public static final String DIFF3MERGE_END = ">>>>>>>";
 		public DuplicateFreeLinkedList<File> parsedErrors ;
+
 	//end #conflictsAnalyzer
 
 	public FSTGenMerger() {
