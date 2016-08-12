@@ -126,12 +126,12 @@ public class LineBasedMerger implements MergerInterface {
 				}
 				pr.getInputStream().close();
 
-			}/*else{
+			}else{
 				
 				if(this.isConflictPredictor(node, tokens)){
 						res = node.getBody();
 				}
-			}*/
+			}
 			//#conflictAnalyzer
 			node.setBody(res);
 
@@ -176,17 +176,18 @@ public class LineBasedMerger implements MergerInterface {
 	private boolean isConflictPredictor(FSTTerminal node, String[] tokens){
 		boolean result = false;
 		if((this.isMethodOrConstructor(node.getType()) && this.atLeastOneVersionWasEdited(tokens)) ||
-				(node.getType().equals("FieldDecl") && this.bothVersionsWereEdited(tokens) 
+				(node.getType().equals("FieldDecl") && this.bothVersionsWereDifferentlyEdited(tokens) 
 						&& !tokens[1].equals("")) ){
 			result = true;
 		}
 		return result;
 	}
 	
-	private boolean bothVersionsWereEdited(String[] tokens){
+	private boolean bothVersionsWereDifferentlyEdited(String[] tokens){
 		boolean result = false;
 		if( !tokens[0].equals("") && !tokens[2].equals("") 
-				&& !tokens[2].equals(tokens[1]) &&  !tokens[0].equals(tokens[1]) ){
+				&& !tokens[2].equals(tokens[1]) &&  !tokens[0].equals(tokens[1]) 
+				&& !tokens[2].equals(tokens[0])){
 			result = true;
 		}
 		return result;
