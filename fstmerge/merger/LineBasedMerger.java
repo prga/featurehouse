@@ -156,8 +156,9 @@ public class LineBasedMerger implements MergerInterface {
 	 * returns true if at least one version (left or right) differs from base*/
 	private boolean atLeastOneVersionWasEdited(String[] tokens){
 		boolean result = false;
-		if( !tokens[0].equals("") && !tokens[2].equals("") && 
-				( !tokens[0].equals(tokens[1]) || !tokens[2].equals(tokens[1]) ) ){
+		if( !tokens[0].equals("") && !tokens[2].equals("") && !tokens[1].equals("") &&
+				( !tokens[0].equals(tokens[1]) || !tokens[2].equals(tokens[1]) ) &&
+				!tokens[0].equals(tokens[2])){
 			result = true;
 		}
 		return result;
@@ -186,8 +187,8 @@ public class LineBasedMerger implements MergerInterface {
 	private boolean bothVersionsWereDifferentlyEdited(String[] tokens){
 		boolean result = false;
 		if( !tokens[0].equals("") && !tokens[2].equals("") 
-				&& !tokens[2].equals(tokens[1]) &&  !tokens[0].equals(tokens[1]) 
-				&& !tokens[2].equals(tokens[0])){
+				&& !tokens[1].equals("") &&  !tokens[0].equals(tokens[1]) 
+				&& !tokens[2].equals(tokens[1]) && !tokens[2].equals(tokens[0])){
 			result = true;
 		}
 		return result;
