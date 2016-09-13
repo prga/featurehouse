@@ -1576,7 +1576,7 @@ int jjround;
 int jjmatchedPos;
 int jjmatchedKind;
 
-public Token getNextToken() throws cide.gparser.TokenMgrError 
+public Token getNextToken() 
 {
   int kind;
   Token specialToken = null;
