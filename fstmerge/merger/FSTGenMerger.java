@@ -50,7 +50,8 @@ public class FSTGenMerger extends FSTGenProcessor {
 		}
 		public static final String DIFF3MERGE_SEPARATOR = "<<<<<<<";
 		public static final String DIFF3MERGE_END = ">>>>>>>";
-		public DuplicateFreeLinkedList<File> parsedErrors;
+		public DuplicateFreeLinkedList<File> parsedErrors ;
+
 	//end #conflictsAnalyzer
 
 	public FSTGenMerger() {
@@ -200,7 +201,7 @@ public class FSTGenMerger extends FSTGenProcessor {
 				}
 			}
 
-			removeBadParsedFiles(expressionval);
+			//removeBadParsedFiles(expressionval);
 
 			setFstnodes(AbstractFSTParser.fstnodes);
 		} catch (MergeException me) {
