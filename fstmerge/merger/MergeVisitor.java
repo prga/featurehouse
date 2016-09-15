@@ -14,7 +14,7 @@ extends Observable
 //end of #conflictsAnalyzer
 {
 	//normalization study
-	private boolean isMergeCommit;
+	//private boolean isMergeCommit;
 	//end of normalization study
 
 	private LinkedList<MergerInterface> mergerList = new LinkedList<MergerInterface>();
@@ -69,7 +69,7 @@ extends Observable
 	}
 
 	//normalization study
-	public void setIsMergeCommit (Boolean isMC){
+	/*public void setIsMergeCommit (Boolean isMC){
 		this.isMergeCommit = isMC;
 	}
 
@@ -96,7 +96,7 @@ extends Observable
 				nodeWasChanged = true;
 			}	
 		return nodeWasChanged;
-	}
+	}*/
 	
 	//normalization study
 	

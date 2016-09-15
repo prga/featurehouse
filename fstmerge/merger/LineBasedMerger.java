@@ -38,11 +38,11 @@ public class LineBasedMerger implements MergerInterface {
 		if(!(node.getType().contains("-Content") ||
 				node.getMergingMechanism().equals("LineBased")
 				)
-				//#conflictAnalyzer
+				//#conflictPredictor
 				/*if this node is a class field 
 				 * run diff3 instead*/
-				&& !(node.getType().equals("FieldDecl"))
-				//#conflictAnalyzer
+				//&& !(node.getType().equals("FieldDecl"))
+				//#conflictPredictor
 				) {
 			if(tokens[0].length() == 0 && tokens[1].length() == 0 && tokens[2].length() == 0) {
 				node.setBody("");
@@ -126,12 +126,15 @@ public class LineBasedMerger implements MergerInterface {
 				}
 				pr.getInputStream().close();
 
-			}else{
+			}//conflictPredictor
+			/*else{
 				
 				if(this.isConflictPredictor(node, tokens)){
 						res = node.getBody();
 				}
-			}
+				
+			}*/
+			//end of conflictPredictor
 			//#conflictAnalyzer
 			node.setBody(res);
 

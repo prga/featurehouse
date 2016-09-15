@@ -110,7 +110,7 @@ public class Java15MergeParser extends AbstractFSTParser implements Java15MergeP
       ;
     }
     jj_consume_token(SEMICOLON);
-                                                                                                                                                                        {if (true) return productionEndTerminal("ImportDeclaration","{Name}{ImportPackage}","{Name}{ImportPackage}","Replacement","Default",first,token);}
+                                                                                                                                                                        {if (true) return productionEndTerminal("ImportDeclaration","{Name}{ImportPackage}","{Name}{ImportPackage}","Replacement","SemanticConflict",first,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -667,7 +667,7 @@ public class Java15MergeParser extends AbstractFSTParser implements Java15MergeP
       jj_la1[28] = jj_gen;
       ;
     }
-                                                                                                                                                                   {if (true) return productionEndTerminal("EnumConstant","{<IDENTIFIER>}","{<IDENTIFIER>}","Replacement","SemanticConflict",first,token);}
+                                                                                                                                                                   {if (true) return productionEndTerminal("EnumConstant","{<IDENTIFIER>}","{<IDENTIFIER>}","Replacement","LineBased",first,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -692,7 +692,7 @@ public class Java15MergeParser extends AbstractFSTParser implements Java15MergeP
                                                                                 replaceName(n);
     }
     jj_consume_token(GT);
-                                                                                                        {if (true) return productionEndTerminal("TypeParameters","-","-","Replacement","SemanticConflict",first,token);}
+                                                                                                        {if (true) return productionEndTerminal("TypeParameters","-","-","Replacement","Default",first,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -733,7 +733,7 @@ public class Java15MergeParser extends AbstractFSTParser implements Java15MergeP
       n = ClassOrInterfaceType(true);
                                                                                                     replaceName(n);
     }
-                                                                                                                        {if (true) return productionEndTerminal("TypeBound","-","-","Replacement","SemanticConflict",first,token);}
+                                                                                                                        {if (true) return productionEndTerminal("TypeBound","-","-","Replacement","Default",first,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -1672,7 +1672,7 @@ public class Java15MergeParser extends AbstractFSTParser implements Java15MergeP
       jj_consume_token(EXTENDS);
       n = ReferenceTypeP(true);
                                           replaceName(n);
-                                                            {if (true) return productionEndTerminal("WildcardBounds1","-","-","Replacement","SemanticConflict",first,token);}
+                                                            {if (true) return productionEndTerminal("WildcardBounds1","-","-","Replacement","Default",first,token);}
       break;
     case SUPER:
       jj_consume_token(SUPER);

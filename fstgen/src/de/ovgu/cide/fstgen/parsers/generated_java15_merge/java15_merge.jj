@@ -329,7 +329,7 @@ FSTInfo PackageDeclaration(boolean inTerminal) : { Token first=null,t;FSTInfo n;
 
 FSTInfo ImportDeclaration(boolean inTerminal) : { Token first=null,t;FSTInfo n; 
 } { {first=getToken(1); productionStart(inTerminal); } (
-	"import" ["static" ] n=Name(true){ replaceName("Name", n);}{ replaceName(n);} [n=ImportPackage(true){ replaceName("ImportPackage", n);}{ replaceName(n);}] ";" {return productionEndTerminal("ImportDeclaration","{Name}{ImportPackage}","{Name}{ImportPackage}","Replacement","Default",first,token);}
+	"import" ["static" ] n=Name(true){ replaceName("Name", n);}{ replaceName(n);} [n=ImportPackage(true){ replaceName("ImportPackage", n);}{ replaceName(n);}] ";" {return productionEndTerminal("ImportDeclaration","{Name}{ImportPackage}","{Name}{ImportPackage}","Replacement","SemanticConflict",first,token);}
 
  )  }
 
@@ -449,7 +449,7 @@ FSTInfo EnumConstants(boolean inTerminal) : { Token first=null,t;FSTInfo n;
 
 FSTInfo EnumConstant(boolean inTerminal) : { Token first=null,t;FSTInfo n; 
 } { {first=getToken(1); productionStart(inTerminal); } (
-	t=<IDENTIFIER>{ replaceName(new FSTInfo("<IDENTIFIER>",t.image));} [n=Arguments(true){ replaceName(n);}] [n=ClassOrInterfaceBody(true){ replaceName(n);}] {return productionEndTerminal("EnumConstant","{<IDENTIFIER>}","{<IDENTIFIER>}","Replacement","SemanticConflict",first,token);}
+	t=<IDENTIFIER>{ replaceName(new FSTInfo("<IDENTIFIER>",t.image));} [n=Arguments(true){ replaceName(n);}] [n=ClassOrInterfaceBody(true){ replaceName(n);}] {return productionEndTerminal("EnumConstant","{<IDENTIFIER>}","{<IDENTIFIER>}","Replacement","LineBased",first,token);}
 
  )  }
 
