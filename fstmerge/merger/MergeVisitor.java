@@ -48,7 +48,7 @@ extends Observable
 						//perform conflict pattern analysis and removal of spacing conflicts
 
 						String nodeBody = ((FSTTerminal)current).getBody();
-						if(nodeBody.contains(FSTGenMerger.MERGE_SEPARATOR) || nodeBody.contains(FSTGenMerger.DIFF3MERGE_SEPARATOR)) {
+						if(nodeBody.contains(FSTGenMerger.MERGE_SEPARATOR) || nodeBody.contains(FSTGenMerger.HAS_CONFLICTS)) {
 							setChanged();
 							notifyObservers(current);
 						}
@@ -69,7 +69,8 @@ extends Observable
 	}
 
 	//normalization study
-	/*public void setIsMergeCommit (Boolean isMC){
+	/*
+	public void setIsMergeCommit (Boolean isMC){
 		this.isMergeCommit = isMC;
 	}
 
