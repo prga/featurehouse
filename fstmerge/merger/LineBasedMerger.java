@@ -41,7 +41,7 @@ public class LineBasedMerger implements MergerInterface {
 				//#conflictPredictor
 				/*if this node is a class field 
 				 * run diff3 instead*/
-				//&& !(node.getType().equals("FieldDecl"))
+				&& !(node.getType().equals("FieldDecl"))
 				//#conflictPredictor
 				) {
 			if(tokens[0].length() == 0 && tokens[1].length() == 0 && tokens[2].length() == 0) {
@@ -128,13 +128,13 @@ public class LineBasedMerger implements MergerInterface {
 				res = FSTGenMerger.HAS_CONFLICTS + "\n" + node.getBody();
 
 			}//conflictPredictor
-			/*else{
+			else{
 				
 				if(this.isConflictPredictor(node, tokens)){
 						res = node.getBody();
 				}
 				
-			}*/
+			}
 			//end of conflictPredictor
 			//#conflictAnalyzer
 			node.setBody(res);
