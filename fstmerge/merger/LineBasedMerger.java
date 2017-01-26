@@ -125,7 +125,7 @@ public class LineBasedMerger implements MergerInterface {
 					res += line + "\n";
 				}
 				pr.getInputStream().close();*/
-				res = FSTGenMerger.HAS_CONFLICTS + "\n" + node.getBody();
+				res = FSTGenMerger.HAS_CONFLICTS + node.getBody();
 
 			}//conflictPredictor
 			else{
