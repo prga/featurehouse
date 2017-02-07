@@ -40,7 +40,6 @@ public class FSTGenMerger extends FSTGenProcessor {
 
 	public static final String MERGE_SEPARATOR = "##FSTMerge##";
 	public static final String SEMANTIC_MERGE_MARKER = "~~FSTMerge~~";
-	public static final String HAS_CONFLICTS = "/*HAS CONFLICTS*/";
 	private static LinkedList<FSTNode> baseNodes = new LinkedList<FSTNode>();
 
 	private MergeVisitor mergeVisitor = new MergeVisitor();
