@@ -692,7 +692,7 @@ public class Java15MergeParser extends AbstractFSTParser implements Java15MergeP
                                                                                 replaceName(n);
     }
     jj_consume_token(GT);
-                                                                                                        {if (true) return productionEndTerminal("TypeParameters","-","-","Replacement","Default",first,token);}
+                                                                                                        {if (true) return productionEndTerminal("TypeParameters","-","-","Replacement","SemanticConflict",first,token);}
     throw new Error("Missing return statement in function");
   }
 
