@@ -48,7 +48,7 @@ extends Observable
 						//perform conflict pattern analysis and removal of spacing conflicts
 
 						String nodeBody = ((FSTTerminal)current).getBody();
-						if(nodeBody.contains(FSTGenMerger.MERGE_SEPARATOR) || nodeBody.contains(FSTGenMerger.HAS_CONFLICTS)) {
+						if(nodeBody.contains(FSTGenMerger.MERGE_SEPARATOR) || nodeBody.contains(FSTGenMerger.DIFF3MERGE_SEPARATOR)) {
 							setChanged();
 							notifyObservers(current);
 						}
